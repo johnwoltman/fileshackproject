@@ -36,6 +36,7 @@ from django import forms
 from django.views.decorators.http import require_POST, require_GET
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.admin.views.decorators import staff_member_required
 
 try: from django.utils import timezone
 except ImportError: from .compat import timezone
@@ -107,6 +108,7 @@ def logout(request, store):
     request.session.save()
     return HttpResponseRedirect(store.get_absolute_url())
 
+@staff_member_required
 @require_store
 def index(request, store):
     if ("fileshack_stores" not in request.session or \
@@ -193,6 +195,7 @@ def iframe(request, store):
         "item": Item.objects.get(pk=item.pk).simple()
     }))
 
+@staff_member_required
 @never_cache
 @require_store
 @require_login
@@ -337,6 +340,7 @@ def simple_upload(request, store):
     item.save()
     return HttpResponseRedirect(store.get_absolute_url())
 
+@staff_member_required
 @require_store
 @require_login
 def delete(request, store, item_id):
@@ -348,6 +352,7 @@ def delete(request, store, item_id):
 
     return HttpResponse("Item has been deleted")
 
+@staff_member_required
 @never_cache
 @require_store
 @require_login
